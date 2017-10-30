@@ -27,13 +27,14 @@ namespace Grades
             WriteResult("Average", stats.AverageGrade);
             WriteResult("Highest", (int)stats.HighestGrade);
             WriteResult("Lowest", stats.LowestGrade);
+            WriteResult(stats.Description, stats.LetterGrade);
         }
 
         static void OnNameChanged(object sender, NameChangedEventArgs args)
         {
             Console.WriteLine($"Grade book changing name from {args.ExistingName} to {args.NewName}");
         }
-               
+
         static void WriteResult(string description, int result)     //String interpolation (After C# 6)
         {
             Console.WriteLine($"{description}: {result:C}");
@@ -42,6 +43,11 @@ namespace Grades
         static void WriteResult(string description, float result)   //Formatting string
         {
             Console.WriteLine("{0}: {1:F2}", description, result);
+        }
+
+        static void WriteResult(string description, string result)
+        {
+            Console.WriteLine($"{description}: {result}", description, result);
         }
     }
 }
