@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,46 @@ namespace Grades
         static void Main(string[] args)
         {
             GradeBook book = new GradeBook();
+            GetBookName(book);              //Extract Method (part of refactoring)
+
+            // book.NameChanged += new NameChangedDelegate(OnNameChanged);
+            book.NameChanged += OnNameChanged;     //Same as the above, but less verbose
+
+            book.Name = "Alan's Gradebook";
+            book.Name = "Gradebook";
+            AddGrades(book);                //Extract Method (part of refactoring)
+            SaveGrades(book);               //Extract Method (part of refactoring)
+
+            Console.WriteLine(book.Name);
+            WriteResults(book);             //Extract Method (part of refactoring)
+        }
+
+        private static void WriteResults(GradeBook book)
+        {
+            GradeStatistics stats = book.ComputeStatistics();
+            WriteResult("Average", stats.AverageGrade);
+            WriteResult("Highest", (int)stats.HighestGrade);
+            WriteResult("Lowest", stats.LowestGrade);
+            WriteResult(stats.Description, stats.LetterGrade);
+        }
+
+        private static void SaveGrades(GradeBook book)
+        {
+            using (StreamWriter outputFile = File.CreateText("Grades.txt"))     //using (): For closing and disposing properly (cleaning up resources)
+            {
+                book.WriteGrades(outputFile);
+            }
+        }
+
+        private static void AddGrades(GradeBook book)
+        {
+            book.AddGrade(91);
+            book.AddGrade(89.5f);
+            book.AddGrade(75);
+        }
+
+        private static void GetBookName(GradeBook book)
+        {
             try
             {
                 Console.WriteLine("Enter a name:");
@@ -20,24 +61,10 @@ namespace Grades
             {
                 Console.WriteLine(ex.Message);
             }
-
-            // book.NameChanged += new NameChangedDelegate(OnNameChanged);
-            book.NameChanged += OnNameChanged;     //Same as the above, but less verbose
-
-            book.Name = "Alan's Gradebook";
-            book.Name = "Gradebook";
-            
-            book.AddGrade(91);
-            book.AddGrade(89.5f);
-            book.AddGrade(75);
-            book.WriteGrades(Console.Out);
-
-            GradeStatistics stats = book.ComputeStatistics();
-            Console.WriteLine(book.Name);
-            WriteResult("Average", stats.AverageGrade);
-            WriteResult("Highest", (int)stats.HighestGrade);
-            WriteResult("Lowest", stats.LowestGrade);
-            WriteResult(stats.Description, stats.LetterGrade);
+            catch (Exception)       //The less specific the exceptions, the lower level they are within the code, to avoid catching everything yet don't know what's happening
+            {
+                Console.WriteLine("Something went wrong!");
+            }
         }
 
         static void OnNameChanged(object sender, NameChangedEventArgs args)
