@@ -11,6 +11,15 @@ namespace Grades
         static void Main(string[] args)
         {
             GradeBook book = new GradeBook();
+            try
+            {
+                Console.WriteLine("Enter a name:");
+                book.Name = Console.ReadLine();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             // book.NameChanged += new NameChangedDelegate(OnNameChanged);
             book.NameChanged += OnNameChanged;     //Same as the above, but less verbose
