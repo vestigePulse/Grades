@@ -13,8 +13,10 @@ namespace Grades
             grades = new List<float>();
         }
 
-        public GradeStatistics ComputeStatistics()
+        public virtual GradeStatistics ComputeStatistics()      //"virtual" to invoke polymorphism (GradeBook/ThrowAwayGradeBook)
         {
+            Console.WriteLine("GradeBook::ComputeStatistics");     //Simple debug to ensure going through of the GradeBook:ComputeStatistics method
+
             GradeStatistics stats = new GradeStatistics();
 
             float sum = 0;
@@ -72,6 +74,6 @@ namespace Grades
 
         private string _name;
 
-        private List<float> grades;
+        protected List<float> grades;
     }
 }

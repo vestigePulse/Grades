@@ -11,19 +11,24 @@ namespace Grades
     {
         static void Main(string[] args)
         {
-            GradeBook book = new GradeBook();
-            GetBookName(book);              //Extract Method (part of refactoring)
+            GradeBook book = CreateGradeBook();
+            //GetBookName(book);              //Extract Method (part of refactoring)
 
             // book.NameChanged += new NameChangedDelegate(OnNameChanged);
-            book.NameChanged += OnNameChanged;     //Same as the above, but less verbose
+            //book.NameChanged += OnNameChanged;     //Same as the above, but less verbose
 
-            book.Name = "Alan's Gradebook";
-            book.Name = "Gradebook";
+            //book.Name = "Alan's Gradebook";
+            //book.Name = "Gradebook";
             AddGrades(book);                //Extract Method (part of refactoring)
             SaveGrades(book);               //Extract Method (part of refactoring)
 
-            Console.WriteLine(book.Name);
+            //Console.WriteLine(book.Name);
             WriteResults(book);             //Extract Method (part of refactoring)
+        }
+
+        private static GradeBook CreateGradeBook()
+        {
+            return new ThrowAwayGradeBook();
         }
 
         private static void WriteResults(GradeBook book)
