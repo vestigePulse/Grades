@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Grades
 {
-    public class GradeBook
+    public class GradeBook : GradeTracker
     {
 
         public GradeBook()
@@ -13,7 +13,7 @@ namespace Grades
             grades = new List<float>();
         }
 
-        public virtual GradeStatistics ComputeStatistics()      //"virtual" to invoke polymorphism (GradeBook/ThrowAwayGradeBook)
+        public override GradeStatistics ComputeStatistics()      //"virtual" to invoke polymorphism (GradeBook/ThrowAwayGradeBook); replace with "override" for abstract method
         {
             Console.WriteLine("GradeBook::ComputeStatistics");     //Simple debug to ensure going through of the GradeBook:ComputeStatistics method
 
@@ -30,7 +30,7 @@ namespace Grades
             return stats;
         }
 
-        public void WriteGrades(TextWriter destination)
+        public override void WriteGrades(TextWriter destination)        //Since GradeBook class is inherited from GradeTracker (abstract class, which is a virtual base class), "override" has to be added.
         {
             for (int i = 0; i < grades.Count; i++)
             {
@@ -38,41 +38,10 @@ namespace Grades
             }
         }
 
-        public void AddGrade(float grade)
+        public override void AddGrade(float grade)
         {
             grades.Add(grade);
         }
-
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentException("Name cannot be null or empty.");
-                }
-
-                if (_name != value && NameChanged != null)
-                {
-                    NameChangedEventArgs args = new NameChangedEventArgs();
-                    args.ExistingName = _name;
-                    args.NewName = value;
-
-                    NameChanged(this, args);
-                }
-
-                _name = value;
-
-            }
-        }
-
-        public event NameChangedDelegate NameChanged;
-
-        private string _name;
 
         protected List<float> grades;
     }
